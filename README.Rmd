@@ -93,6 +93,8 @@ library(data.table)
 library(dtplyr)
 library(dplyr)
 library(leaflet)
+library(mgcv)
+library(ggplot2)
 ```
 
 2. Load the met data from https://raw.githubusercontent.com/JSC370/JSC370-2024/main/data/met_all_2023.gz, and also the station data. For the latter, you can use the code we used during lecture to pre-process the stations data:
@@ -285,5 +287,36 @@ Let's practice running regression models with smooth functions on X. We need the
 - fit both a linear model and a spline model (use `gam()` with a cubic regression spline on wind speed). Summarize and plot the results from the models and interpret which model is the best fit and why.
 
 ```{r}
+# Compute median values per station
+median_values <- met_dt[, .(
+    median_temp = median(temp, na.rm = TRUE),
+    median_wind_sp = median(wind.sp, na.rm = TRUE)
+), by = USAFID]
 
+ggplot(median_values, aes(x = median_wind_sp, y = median_temp)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE, color = "blue") +
+    geom_smooth(method = "gam", formula = y ~ s(x, bs = "cs"), se = FALSE, color = "red") +
+    labs(title = "Median Temperature vs Median Wind Speed",
+         x = "Median Wind Speed",
+         y = "Median Temperature")
 ```
+
+```{r}
+lm_model <- lm(median_temp ~ median_wind_sp, data = median_values)
+summary(lm_model)
+
+gam_model <- gam(median_temp ~ s(median_wind_sp, bs = "cs"), data = median_values)
+summary(gam_model)
+
+plot(median_values$median_wind_sp, median_values$median_temp, pch = 16, 
+     xlab = "Median Wind Speed", ylab = "Median Temperature", 
+     main = "Regression Models")
+abline(lm_model, col = "blue", lwd = 2)  # Linear model line
+lines(sort(median_values$median_wind_sp), 
+      predict(gam_model, newdata = data.frame(median_wind_sp = sort(median_values$median_wind_sp))),
+      col = "red", lwd = 2)  # GAM model line
+legend("topright", legend = c("Linear Model", "GAM"), col = c("blue", "red"), lwd = 2)
+```
+
+We can see from the summary statistics that the GAM model has a better fit. In addition, we can see that the smooth term in the GAM model is significant, indicating it is better.
