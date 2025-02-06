@@ -507,7 +507,7 @@ coincide?</p>
     median_atm  = quantile(atm.press, 0.5, na.rm = TRUE)
 )]
 
-met_dt[(temp == medians$median_temp) &amp; (wind.sp == medians$median_wind) &amp; (atm.press == medians$median_atm)][, USAFID]</code></pre>
+met_dt[(temp == medians$median_temp) &amp; (wind.sp == medians$median_wind) &amp; (atm.press == medians$median_atm)][, USAFID] # there appears to be only 1 station that meets all criteria</code></pre>
 <pre><code>## [1] 722246</code></pre>
 <p>Knit the document, commit your changes, and save it on GitHub. Don’t
 forget to add <code>README.md</code> to the tree, the first time you
@@ -520,6 +520,81 @@ the most representative, the median, station per state. This time,
 instead of looking at one variable at a time, look at the euclidean
 distance. If multiple stations show in the median, select the one
 located at the lowest latitude.</p>
+<pre class="r"><code>mydist &lt;- function(x, y, z) sqrt(x^2 + y^2 + z^2)
+
+medians_by_state &lt;- met_dt[, .(
+    median_temp = quantile(temp, 0.5, na.rm = TRUE),
+    median_wind = quantile(wind.sp, 0.5, na.rm = TRUE),
+    median_atm  = quantile(atm.press, 0.5, na.rm = TRUE)
+), by = STATE]
+
+met_dt &lt;- merge(
+    # Data
+    x     = met_dt,
+    y     = medians_by_state,
+    # List of variables to match
+    by.x  = &quot;STATE&quot;,
+    by.y  = &quot;STATE&quot;,
+    # Which obs to keep?
+    all.x = TRUE,
+    all.y = FALSE
+)
+
+met_dt[, distance := mydist(temp - median_temp, wind.sp - median_wind, atm.press - median_atm)]
+
+representative_stations &lt;- met_dt[
+    , .SD[which.min(distance)], by = STATE
+]
+
+representative_stations[, list(STATE, USAFID)]</code></pre>
+<pre><code>##     STATE USAFID
+##  1:    AL 722265
+##  2:    AR 720377
+##  3:    AZ 722730
+##  4:    CA 722880
+##  5:    CO 724665
+##  6:    CT 725027
+##  7:    DE 724180
+##  8:    FL 722210
+##  9:    GA 722175
+## 10:    IA 725470
+## 11:    ID 726810
+## 12:    IL 725347
+## 13:    IN 724320
+## 14:    KS 724468
+## 15:    KY 724240
+## 16:    LA 722400
+## 17:    MA 725064
+## 18:    MD 724060
+## 19:    ME 726083
+## 20:    MI 725386
+## 21:    MN 726440
+## 22:    MO 724450
+## 23:    MS 722340
+## 24:    MT 726770
+## 25:    NC 723030
+## 26:    NE 725555
+## 27:    NH 726164
+## 28:    NJ 724095
+## 29:    NM 723600
+## 30:    NV 725825
+## 31:    NY 726228
+## 32:    OH 724290
+## 33:    OK 723544
+## 34:    OR 720365
+## 35:    PA 720378
+## 36:    RI 725079
+## 37:    SC 723106
+## 38:    SD 726518
+## 39:    TN 723250
+## 40:    TX 722536
+## 41:    UT 725720
+## 42:    VA 724030
+## 43:    VT 725165
+## 44:    WI 726424
+## 45:    WV 724120
+## 46:    WY 725690
+##     STATE USAFID</code></pre>
 <p>Knit the doc and save it on GitHub.</p>
 </div>
 <div id="question-3-in-the-middle" class="section level2">

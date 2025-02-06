@@ -150,7 +150,7 @@ medians <- met_dt[, .(
     median_atm  = quantile(atm.press, 0.5, na.rm = TRUE)
 )]
 
-met_dt[(temp == medians$median_temp) & (wind.sp == medians$median_wind) & (atm.press == medians$median_atm)][, USAFID]
+met_dt[(temp == medians$median_temp) & (wind.sp == medians$median_wind) & (atm.press == medians$median_atm)][, USAFID] # there appears to be only 1 station that meets all criteria
 ```
 
 Knit the document, commit your changes, and save it on GitHub. Don't forget to add `README.md` to the tree, the first time you render it.
@@ -160,7 +160,33 @@ Knit the document, commit your changes, and save it on GitHub. Don't forget to a
 Just like the previous question, you are asked to identify what is the most representative, the median, station per state. This time, instead of looking at one variable at a time, look at the euclidean distance. If multiple stations show in the median, select the one located at the lowest latitude.
 
 ```{r}
+mydist <- function(x, y, z) sqrt(x^2 + y^2 + z^2)
 
+medians_by_state <- met_dt[, .(
+    median_temp = quantile(temp, 0.5, na.rm = TRUE),
+    median_wind = quantile(wind.sp, 0.5, na.rm = TRUE),
+    median_atm  = quantile(atm.press, 0.5, na.rm = TRUE)
+), by = STATE]
+
+met_dt <- merge(
+    # Data
+    x     = met_dt,
+    y     = medians_by_state,
+    # List of variables to match
+    by.x  = "STATE",
+    by.y  = "STATE",
+    # Which obs to keep?
+    all.x = TRUE,
+    all.y = FALSE
+)
+
+met_dt[, distance := mydist(temp - median_temp, wind.sp - median_wind, atm.press - median_atm)]
+
+representative_stations <- met_dt[
+    , .SD[which.min(distance)], by = STATE
+]
+
+representative_stations[, list(STATE, USAFID)]
 ```
 
 Knit the doc and save it on GitHub.
