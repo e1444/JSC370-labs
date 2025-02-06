@@ -92,6 +92,7 @@ Once you are done setting up the project, you can now start working with the MET
 library(data.table)
 library(dtplyr)
 library(dplyr)
+library(leaflet)
 ```
 
 2. Load the met data from https://raw.githubusercontent.com/JSC370/JSC370-2024/main/data/met_all_2023.gz, and also the station data. For the latter, you can use the code we used during lecture to pre-process the stations data:
@@ -162,6 +163,22 @@ Just like the previous question, you are asked to identify what is the most repr
 ```{r}
 mydist <- function(x, y, z) sqrt(x^2 + y^2 + z^2)
 
+met_dt[, distance := mydist(temp - medians$median_temp, wind.sp - medians$median_wind, atm.press - medians$median_atm)]
+
+representative_stations <- met_dt[
+    , .SD[order(distance, lat)][1], by = STATE
+]
+
+representative_stations[, list(STATE, USAFID)]
+```
+
+Knit the doc and save it on GitHub.
+
+## Question 3: In the middle?
+
+For each state, identify what is the station that is closest to the mid-point of the state. Combining these with the stations you identified in the previous question, use `leaflet()` to visualize all ~100 points in the same figure, applying different colors for those identified in this question.
+
+```{r}
 medians_by_state <- met_dt[, .(
     median_temp = quantile(temp, 0.5, na.rm = TRUE),
     median_wind = quantile(wind.sp, 0.5, na.rm = TRUE),
@@ -180,23 +197,35 @@ met_dt <- merge(
     all.y = FALSE
 )
 
-met_dt[, distance := mydist(temp - median_temp, wind.sp - median_wind, atm.press - median_atm)]
+met_dt[, statewise_distance := mydist(temp - median_temp, wind.sp - median_wind, atm.press - median_atm)]
 
-representative_stations <- met_dt[
-    , .SD[which.min(distance)], by = STATE
+statewise_representative_stations <- met_dt[
+    , .SD[order(statewise_distance, lat)[1]], by = STATE
 ]
 
-representative_stations[, list(STATE, USAFID)]
+statewise_representative_stations[, list(STATE, USAFID)]
 ```
 
-Knit the doc and save it on GitHub.
-
-## Question 3: In the middle?
-
-For each state, identify what is the station that is closest to the mid-point of the state. Combining these with the stations you identified in the previous question, use `leaflet()` to visualize all ~100 points in the same figure, applying different colors for those identified in this question.
-
 ```{r}
-
+# Plotting the stations
+leaflet() |>
+    addProviderTiles('CartoDB.Positron') |>
+    addCircleMarkers(
+        data = statewise_representative_stations,
+        lng = ~lon,
+        lat = ~lat,
+        radius = 5,
+        color = "blue",
+        popup = ~USAFID
+    ) |>
+    addCircleMarkers(
+        data = representative_stations,
+        lng = ~lon,
+        lat = ~lat,
+        radius = 5,
+        color = "red",
+        popup = ~USAFID
+    )
 ```
 
 Knit the doc and save it on GitHub.
