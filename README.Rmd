@@ -144,6 +144,13 @@ head(met_dt[, list(USAFID, WBAN, STATE)])
 Across all weather stations, what stations have the median values of temperature, wind speed, and atmospheric pressure? Using the `quantile()` function, identify these three stations. Do they coincide?
 
 ```{r}
+medians <- met_dt[, .(
+    median_temp = quantile(temp, 0.5, na.rm = TRUE),
+    median_wind = quantile(wind.sp, 0.5, na.rm = TRUE),
+    median_atm  = quantile(atm.press, 0.5, na.rm = TRUE)
+)]
+
+met_dt[(temp == medians$median_temp) & (wind.sp == medians$median_wind) & (atm.press == medians$median_atm)][, USAFID]
 ```
 
 Knit the document, commit your changes, and save it on GitHub. Don't forget to add `README.md` to the tree, the first time you render it.
