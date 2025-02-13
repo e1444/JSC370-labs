@@ -69,8 +69,12 @@ The parameters passed to the query are documented [here](https://www.ncbi.nlm.ni
 ```{r papers-covid-toronto, eval=FALSE}
 library(httr)
 query_ids <- GET(
-  url   = "BASELINE URL",
-  query = list("QUERY PARAMETERS")
+  url   = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi",
+  query = list(
+    db     = "pubmed",
+    term   = "h5n1 toronto",
+    retmax = 1000
+  )
 )
 
 # Extracting the content of the response of GET
@@ -94,11 +98,11 @@ following lines of code:
 # Turn the result into a character vector
 ids <- as.character(ids)
 
-# Find all the ids 
-ids <- stringr::str_extract_all(ids, "PATTERN")[[1]]
+# Find all the ids
+ids <- stringr::str_extract_all(ids, "(?<=<Id>).*?(?=</Id>)")[[1]]
 
 # Remove all the leading and trailing <Id> </Id>. Make use of "|"
-ids <- stringr::str_remove_all(ids, "PATTERN")
+ids <- stringr::str_remove_all(ids, "<Id>|</Id>") # Don't need this since we make use of the lookbehind and lookahead
 ```
 
 With the ids in hand, we can now try to get the abstracts of the papers. As
@@ -116,9 +120,12 @@ before, we will need to coerce the contents (results) to a list using:
     
 ```{r get-abstracts, eval = FALSE}
 publications <- GET(
-  url   = "BASELINE URL HERE",
+  url   = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi",
   query = list(
-    "PARAMETERS OF THE QUERY"
+      db     = "pubmed",
+      id     = paste(ids, collapse = ","),
+      retmax = 1000,
+      rettype = "abstract"
     )
 )
 
@@ -139,10 +146,11 @@ Using the function `stringr::str_extract_all()` applied on `publications_txt`, c
 Write a regular expression that captures all such instances
 
 ```{r univ-institute-regex, eval = FALSE}
+library(stringr)
 institution <- str_extract_all(
   publications_txt,
-  "[YOUR REGULAR EXPRESSION HERE]"
-  ) 
+  "University of [A-Za-z]+|[A-Za-z]+ Institute of [A-Za-z]+"
+)
 institution <- unlist(institution)
 as.data.frame(table(institution))
 ```
@@ -156,8 +164,8 @@ And tabulate the results
 
 ```{r school-department, eval = FALSE}
 schools_and_deps <- str_extract_all(
-  abstracts_txt,
-  "[YOUR REGULAR EXPRESSION HERE]"
+  publications_txt,
+  "School of [A-Za-z]+|Department of [A-Za-z]+"
   )
 as.data.frame(table(schools_and_deps))
 ```
