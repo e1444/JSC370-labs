@@ -34,21 +34,21 @@ Complete the lines of code:
 
 ```{r counter-pubmed, eval=FALSE}
 # Downloading the website
-website <- xml2::read_html("[URL]")
+website <- xml2::read_html("https://pubmed.ncbi.nlm.nih.gov/?term=h5n1")
 
 # Finding the counts
-counts <- xml2::xml_find_first(website, "[XPath]")
+counts <- xml2::xml_find_first(website, "//*[@id=\"search-results\"]/div[2]/div[1]/div[1]/h3/span")
 
 # Turning it into text
 counts <- as.character(counts)
 
 # Extracting the data using regex
-stringr::str_extract(counts, "[REGEX FOR NUMBERS WITH COMMAS/DOTS]")
+stringr::str_extract(counts, "[0-9.,]+")
 ```
 
  - How many H5N1 papers are there?
 
-_Answer here._
+9,310
 
 Don't forget to commit your work!
 
