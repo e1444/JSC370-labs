@@ -32,7 +32,7 @@ https://pubmed.ncbi.nlm.nih.gov/?term=h5n1
 
 Complete the lines of code:
 
-```{r counter-pubmed, eval=FALSE}
+```{r counter-pubmed, eval = FALSE}
 # Downloading the website
 website <- xml2::read_html("https://pubmed.ncbi.nlm.nih.gov/?term=h5n1")
 
@@ -66,7 +66,7 @@ Use the function `httr::GET()` to make the following query:
 
 The parameters passed to the query are documented [here](https://www.ncbi.nlm.nih.gov/books/NBK25499/).
 
-```{r papers-covid-toronto, eval=FALSE}
+```{r papers-covid-toronto, eval = FALSE}
 library(httr)
 query_ids <- GET(
   url   = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi",
