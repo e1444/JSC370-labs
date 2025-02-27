@@ -22,6 +22,8 @@ from <https://www.mtsamples.com/> available at
 2.  Render the Rmarkdown document using `github_document` and add it to
     your github site. Add link to github site in your html.
 
+3.  [Github](https://github.com/e1444/JSC370-labs)
+
 ### Setup packages
 
 You should load in `tidyverse`, (or `data.table`), `tidytext`,
@@ -111,8 +113,8 @@ tokens |>
 wordcloud2(tokens |> slice_max(n, n = 20))
 ```
 
-<div class="wordcloud2 html-widget html-fill-item" id="htmlwidget-230fce5b6ab502d73248" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-230fce5b6ab502d73248">{"x":{"word":["the","and","was","of","to","a","with","in","is","patient","were","for","no","she","then","this","on","he","at","right"],"freq":[116095,60381,58047,42147,36842,31122,26462,23955,15842,14971,12712,11444,10835,10713,10563,10307,10105,9717,9677,8540],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.001550454369266549,"backgroundColor":"white","gridSize":0,"minRotation":-0.7853981633974483,"maxRotation":0.7853981633974483,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<div class="wordcloud2 html-widget html-fill-item" id="htmlwidget-b9c6be17a991e739fb2b" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-b9c6be17a991e739fb2b">{"x":{"word":["the","and","was","of","to","a","with","in","is","patient","were","for","no","she","then","this","on","he","at","right"],"freq":[116095,60381,58047,42147,36842,31122,26462,23955,15842,14971,12712,11444,10835,10713,10563,10307,10105,9717,9677,8540],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.001550454369266549,"backgroundColor":"white","gridSize":0,"minRotation":-0.7853981633974483,"maxRotation":0.7853981633974483,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
 
 We do not gain any meaningful insights from the word cloud, as the most
 frequent words are articles, prepositions, and other common words that
@@ -178,8 +180,8 @@ tokens |>
 wordcloud2(tokens |> slice_max(n, n = 20))
 ```
 
-<div class="wordcloud2 html-widget html-fill-item" id="htmlwidget-5965fa282eac7e13f555" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-5965fa282eac7e13f555">{"x":{"word":["patient","procedure","placed","history","normal","well","pain","anesthesia","performed","incision","used","time","removed","skin","also","diagnosis","room","blood","will","without"],"freq":[14971,6214,6052,5044,4862,4787,3798,3200,3180,3166,3036,2979,2948,2928,2850,2665,2654,2602,2602,2539],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.01202324494021775,"backgroundColor":"white","gridSize":0,"minRotation":-0.7853981633974483,"maxRotation":0.7853981633974483,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<div class="wordcloud2 html-widget html-fill-item" id="htmlwidget-50fc0c7902e8b7541b53" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-50fc0c7902e8b7541b53">{"x":{"word":["patient","procedure","placed","history","normal","well","pain","anesthesia","performed","incision","used","time","removed","skin","also","diagnosis","room","blood","will","without"],"freq":[14971,6214,6052,5044,4862,4787,3798,3200,3180,3166,3036,2979,2948,2928,2850,2665,2654,2602,2602,2539],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.01202324494021775,"backgroundColor":"white","gridSize":0,"minRotation":-0.7853981633974483,"maxRotation":0.7853981633974483,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
 
 We see some other non-informative words as well as numbers, which we
 manually filter out. We are left with patient as the most frequent word,
@@ -274,8 +276,8 @@ tokens_bigram2 |>
 wordcloud2(tokens_bigram2 |> slice_max(n, n = 20) |> select(word, n))
 ```
 
-<div class="wordcloud2 html-widget html-fill-item" id="htmlwidget-90f21edbdacda5ab46d8" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-90f21edbdacda5ab46d8">{"x":{"word":["tolerated","will","denies","states","also","received","underwent","understood","reports","presents","including","presented","history","lives","remained","appears","reported","denied","went","subsequently","understands"],"freq":[829,420,246,231,192,118,116,98,93,61,48,47,43,42,38,36,36,35,34,33,33],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.2171290711700844,"backgroundColor":"white","gridSize":0,"minRotation":-0.7853981633974483,"maxRotation":0.7853981633974483,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<div class="wordcloud2 html-widget html-fill-item" id="htmlwidget-ec89ec884a34d2491a49" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-ec89ec884a34d2491a49">{"x":{"word":["tolerated","will","denies","states","also","received","underwent","understood","reports","presents","including","presented","history","lives","remained","appears","reported","denied","went","subsequently","understands"],"freq":[829,420,246,231,192,118,116,98,93,61,48,47,43,42,38,36,36,35,34,33,33],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.2171290711700844,"backgroundColor":"white","gridSize":0,"minRotation":-0.7853981633974483,"maxRotation":0.7853981633974483,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
 
 ------------------------------------------------------------------------
 
